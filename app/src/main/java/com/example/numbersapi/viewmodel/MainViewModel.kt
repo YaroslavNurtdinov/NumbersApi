@@ -13,27 +13,31 @@ import com.example.numbersapi.data.database.NumbersDatabase
 import com.example.numbersapi.data.database.entity.NumbersEntity
 import com.example.numbersapi.model.Number
 import com.example.numbersapi.util.NetworkResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val repository: Repository,
+    application: Application
+) : AndroidViewModel(application) {
 
-    private val numbersDao = NumbersDatabase.getInstance(application).numbersDao()
-    private val repository = Repository(numbersDao)
 
     /** * ROOM * **/
-    val readNumbers: LiveData<List<NumbersEntity>> = repository.getAllData
+    val readNumbers: LiveData<List<NumbersEntity>> = repository.local.getAllData
 
     private fun insertNumber(numbersEntity: NumbersEntity) {
         viewModelScope.launch {
-            repository.insertNumber(numbersEntity)
+            repository.local.insertNumber(numbersEntity)
         }
     }
 
     fun deleteAll() {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.deleteAll()
+            repository.local.deleteAll()
         }
     }
 
@@ -55,7 +59,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun getRandomNumberSafeCall() {
         myResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
-            val response = repository.getRandomNumber()
+            val response = repository.remote.getRandomNumber()
             myResponse.value = handleNumberResponse(response)
 
             val number = myResponse.value!!.data
@@ -71,7 +75,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
     private suspend fun getInputNumberSafeCall(inputNumber: Int) {
         myResponse.value = NetworkResult.Loading()
         if (hasInternetConnection()) {
-            val response = repository.getInputNumber(inputNumber)
+            val response = repository.remote.getInputNumber(inputNumber)
             myResponse.value = handleNumberResponse(response)
 
             val number = myResponse.value!!.data

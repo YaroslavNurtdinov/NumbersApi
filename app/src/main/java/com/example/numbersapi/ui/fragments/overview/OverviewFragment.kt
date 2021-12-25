@@ -7,9 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.navArgs
 import com.example.numbersapi.databinding.FragmentOverviewBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class OverviewFragment : Fragment() {
-    private var _binding : FragmentOverviewBinding? = null
+    private var _binding: FragmentOverviewBinding? = null
     private val binding get() = _binding!!
     private val args by navArgs<OverviewFragmentArgs>()
 
@@ -17,7 +19,7 @@ class OverviewFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentOverviewBinding.inflate(layoutInflater,container,false)
+        _binding = FragmentOverviewBinding.inflate(layoutInflater, container, false)
 
 
         binding.titleTextView.text = args.result.number.toString()

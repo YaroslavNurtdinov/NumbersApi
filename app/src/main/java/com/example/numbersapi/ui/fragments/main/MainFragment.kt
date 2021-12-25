@@ -12,8 +12,9 @@ import com.example.numbersapi.databinding.FragmentMainBinding
 import com.example.numbersapi.util.NetworkResult
 import com.example.numbersapi.util.hideKeyboard
 import com.example.numbersapi.viewmodel.MainViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MainFragment : Fragment() {
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
