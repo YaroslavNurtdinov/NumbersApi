@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">NumbersApi</string>
+    <string name="description">42 is the result given by the web search engines Google,
+        Wolfram Alpha and Bing when the query "the answer to life the universe and everything"
+        is entered as a search.</string>
+    <string name="input_number">Input Number</string>
+    <string name="get_fact">Get Fact</string>
+    <string name="get_a_fact_about_random_number">Get a fact about random number</string>
+    <string name="_42">42</string>
+    <string name="delete_all">Delete All</string>
+
+</resources>
