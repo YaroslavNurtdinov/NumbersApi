@@ -27,36 +27,43 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentMainBinding.inflate(layoutInflater, container, false)
+        return binding.root
+    }
+
+    override fun onStart() {
+        super.onStart()
         setHasOptionsMenu(true)
         setupRecyclerView()
 
         mainViewModel.readNumbers.observe(requireActivity(), {
             mAdapter.setData(it.asReversed())
         })
-        requestApiData()
-        return binding.root
+
+        binding.btnRandomNumber.setOnClickListener {
+            mainViewModel.getRandomNumber()
+            requestAddedNumber()
+        }
+
+        binding.btnInputNumber.setOnClickListener {
+            val inputNumber = binding.editText.text.toString()
+            if (inputNumber.isNotEmpty()) {
+                mainViewModel.getInputNumber(Integer.parseInt(inputNumber))
+                requestAddedNumber()
+            } else {
+                Toast.makeText(requireContext(), "Please, input Number", Toast.LENGTH_SHORT)
+                    .show()
+            }
+
+            hideKeyboard()
+        }
     }
 
-    override fun onStart() {
-        super.onStart()
+    override fun onStop() {
+        super.onStop()
         binding.editText.text.clear()
     }
 
-    private fun requestApiData() {
-        binding.apply {
-            btnRandomNumber.setOnClickListener {
-                mainViewModel.getRandomNumber()
-            }
-            btnInputNumber.setOnClickListener {
-                val inputNumber = binding.editText.text.toString()
-                if (inputNumber.isNotEmpty()) {
-                    mainViewModel.getInputNumber(Integer.parseInt(inputNumber))
-                } else Toast.makeText(requireContext(), "Please, input Number", Toast.LENGTH_SHORT)
-                    .show()
-                hideKeyboard()
-            }
-        }
-
+    private fun requestAddedNumber() {
         mainViewModel.myResponse.observe(viewLifecycleOwner, { response ->
             when (response) {
                 is NetworkResult.Success -> {
